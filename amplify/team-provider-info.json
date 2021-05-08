@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-budgetmanager-staging-161552-authRole",
+      "UnauthRoleArn": "arn:aws:iam::432071125959:role/amplify-budgetmanager-staging-161552-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::432071125959:role/amplify-budgetmanager-staging-161552-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-budgetmanager-staging-161552-deployment",
+      "UnauthRoleName": "amplify-budgetmanager-staging-161552-unauthRole",
+      "StackName": "amplify-budgetmanager-staging-161552",
+      "StackId": "arn:aws:cloudformation:us-east-2:432071125959:stack/amplify-budgetmanager-staging-161552/a98bfec0-b018-11eb-94d4-02591e775998",
+      "AmplifyAppId": "d3btd2in86xaw7"
+    },
+    "categories": {
+      "auth": {
+        "budgetmanager": {}
+      }
+    }
+  }
+}
