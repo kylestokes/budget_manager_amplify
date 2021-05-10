@@ -1,5 +1,7 @@
 import 'package:budget_manager/pages/add_budget.dart';
+import 'package:budget_manager/pages/budget_detail_page.dart';
 import 'package:budget_manager/services/budget_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +24,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Budget Manager',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -95,46 +98,57 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: RefreshIndicator(
-        onRefresh: _refreshBudgets,
-        child: _budgets == null || _budgets.length == 0
-            ? Center(
-                child: Text("No budgets"),
-              )
-            : ListView.builder(
-                itemCount: _budgets.length,
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                    child: ListTile(
-                      title: Text(_budgets[index].name),
-                      subtitle: Text(
-                          "${currency.format(_budgets[index].spent)} spent of ${currency.format(_budgets[index].setAmount)}"),
-                    ),
-                    key: ObjectKey(_budgets[index].id),
-                    direction: DismissDirection.endToStart,
-                    resizeDuration: Duration(milliseconds: 200),
-                    background: Container(
-                      padding: EdgeInsets.only(right: 28.0),
-                      alignment: AlignmentDirectional.centerEnd,
-                      color: Colors.red,
-                      child: Icon(
-                        Icons.delete_forever,
-                        color: Colors.white,
+          onRefresh: _refreshBudgets,
+          child: _budgets == null || _budgets.length == 0
+              ? Center(
+                  child: Text("No budgets"),
+                )
+              : ListView.separated(
+                  itemBuilder: (context, index) {
+                    return Dismissible(
+                      child: ListTile(
+                        title: Text(_budgets[index].name),
+                        subtitle: Text(
+                            "${currency.format(_budgets[index].spent)} spent of ${currency.format(_budgets[index].setAmount)}"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BudgetDetailPage(
+                                budget: _budgets[index],
+                              ),
+                            ),
+                          ).whenComplete(() => _refreshBudgets());
+                        },
                       ),
-                    ),
-                    onDismissed: (child) {
-                      _budgetService.deleteBudget(_budgets[index]);
-                      setState(() {
-                        _budgets.removeAt(index);
-                      });
-                    },
-                  );
-                }),
-      ),
+                      key: ObjectKey(_budgets[index].id),
+                      direction: DismissDirection.endToStart,
+                      resizeDuration: Duration(milliseconds: 200),
+                      background: Container(
+                        padding: EdgeInsets.only(right: 28.0),
+                        alignment: AlignmentDirectional.centerEnd,
+                        color: Colors.red,
+                        child: Icon(
+                          Icons.delete_forever,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onDismissed: (child) {
+                        _budgetService.deleteBudget(_budgets[index]);
+                        setState(() {
+                          _budgets.removeAt(index);
+                        });
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => Divider(),
+                  itemCount: _budgets.length,
+                )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
+            CupertinoPageRoute(
               builder: (context) => AddBudgetPage(),
             ),
           ).whenComplete(() => _refreshBudgets());
