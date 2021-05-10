@@ -69,7 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
     Amplify.addPlugin(AmplifyAuthCognito());
 
     try {
-      await Amplify.configure(amplifyconfig).then((value) => {_getBudgets()});
+      await Amplify.configure(amplifyconfig).then((value) {
+        _refreshBudgets();
+      });
     } on AmplifyAlreadyConfiguredException {
       print("Amplify was already configured. Was the app restarted?");
     }
@@ -100,8 +102,14 @@ class _MyHomePageState extends State<MyHomePage> {
       body: RefreshIndicator(
           onRefresh: _refreshBudgets,
           child: _budgets == null || _budgets.length == 0
-              ? Center(
-                  child: Text("No budgets"),
+              ? ListView.builder(
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text("No budgets"),
+                      subtitle: Text("Add one to get started"),
+                    );
+                  },
+                  itemCount: 1,
                 )
               : ListView.separated(
                   itemBuilder: (context, index) {
