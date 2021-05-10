@@ -1,6 +1,8 @@
 import 'package:budget_manager/models/Budget.dart';
+import 'package:budget_manager/pages/add_purchase_page.dart';
 import 'package:budget_manager/pages/edit_budget_page.dart';
 import 'package:budget_manager/services/budget_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -73,7 +75,7 @@ class _BudgetDetailPageState extends State<BudgetDetailPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditBudgetPage(budget: widget.budget),
+                  builder: (context) => EditBudgetPage(budget: _budget),
                 ),
               ).then((value) {
                 _budgetService
@@ -98,7 +100,23 @@ class _BudgetDetailPageState extends State<BudgetDetailPage> {
           size: 28,
         ),
         elevation: 0,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => AddPurchasePage(budget: _budget),
+            ),
+          ).then((value) {
+            _budgetService.getBudgetWithID(widget.budget.id).then((budgets) {
+              if (budgets.length == 1) {
+                Budget budget = budgets.first;
+                setState(() {
+                  _budget = budget;
+                });
+              }
+            });
+          });
+        },
       ),
     );
   }
