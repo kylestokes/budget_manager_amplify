@@ -103,10 +103,30 @@ class _MyHomePageState extends State<MyHomePage> {
             : ListView.builder(
                 itemCount: _budgets.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_budgets[index].name),
-                    subtitle: Text(
-                        "${currency.format(_budgets[index].spent)} spent of ${currency.format(_budgets[index].setAmount)}"),
+                  return Dismissible(
+                    child: ListTile(
+                      title: Text(_budgets[index].name),
+                      subtitle: Text(
+                          "${currency.format(_budgets[index].spent)} spent of ${currency.format(_budgets[index].setAmount)}"),
+                    ),
+                    key: ObjectKey(_budgets[index].id),
+                    direction: DismissDirection.endToStart,
+                    resizeDuration: Duration(milliseconds: 200),
+                    background: Container(
+                      padding: EdgeInsets.only(right: 28.0),
+                      alignment: AlignmentDirectional.centerEnd,
+                      color: Colors.red,
+                      child: Icon(
+                        Icons.delete_forever,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onDismissed: (child) {
+                      _budgetService.deleteBudget(_budgets[index]);
+                      setState(() {
+                        _budgets.removeAt(index);
+                      });
+                    },
                   );
                 }),
       ),

@@ -28,7 +28,7 @@ class BudgetService {
       List<Budget> budgets = await Amplify.DataStore.query(Budget.classType);
       return budgets;
     } catch (e) {
-      print("Could not query DataStore: ${e}");
+      print("Could not query DataStore: $e");
       return null;
     }
   }
